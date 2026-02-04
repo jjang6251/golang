@@ -1,0 +1,20 @@
+lotto-go/
+├── go.mod
+├── cmd/
+│   └── lotto/
+│       └── main.go
+└── internal/
+    ├── controller/
+    │   └── lotto_controller.go
+    ├── domain/
+    │   ├── lotto.go
+    │   ├── lottos.go
+    │   ├── rank.go
+    │   ├── winning_lotto.go
+    │   └── result.go
+    ├── service/
+    │   └── generator.go
+    └── view/
+        ├── input.go
+        ├── parser.go
+        └── output.go

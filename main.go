@@ -83,9 +83,9 @@ func sexyCount(person string) {
 
 
 //---------------------------------------------
-//Chanels
+//Channels
 //GoRoutine 간의 데이터를 주고 받기 위해서는 채널을 생성하고 채널을 통해 주고 받는다.
-func testChanels () {
+func testChannels () {
 	c := make(chan bool)
 	people := [2]string{"nico", "flynn"}
 	for _, person := range people {
@@ -110,6 +110,55 @@ func testChanels () {
 func isSexy(person string, c chan bool) {
 	time.Sleep(time.Second * 5)
 	c <- true
+}
+
+//---------------------------------------------
+//UrlChecker + GoRoutine
+
+type result struct {
+	url string
+	status string
+}
+
+func testUrl2() {
+	//var results = map[string]string{}
+	results := make(map[string]string)
+	c := make(chan result)
+	urls := []string{
+		"https://www.airbnb.com/",
+		"https://www.google.com/",
+		"https://www.amazon.com/",
+		"https://www.reddit.com/",
+		"https://www.google.com/",
+		"https://soundcloud.com/",
+		"https://www.facebook.com/",
+		"https://www.instagram.com/",
+		"https://academy.nomadcoders.co/",
+	}
+	results["Gello"] = "Hello"
+	for _, url := range urls {
+		hitUrl2(url, c)
+	}
+
+	for i := 0; i < len(urls); i++ {
+		result := <- c
+		results[result.url] = result.status
+	}
+
+	for url, status := range results {
+		fmt.Println(url, status)
+	}
+}
+
+// chan<- 이런식으로 채널의 성격을 send-only인지 아니면 receive-only인지 정할 수 있다.
+func hitUrl2(url string, c chan<- result) {
+	fmt.Println("Checking:", url)
+	resp, err := http.Get(url)
+	status := "OK"
+	if err != nil || resp.StatusCode >= 400 {
+		status = "FAILED"
+	}
+	c <- result{url: url, status: status}
 }
 
 func main() {
